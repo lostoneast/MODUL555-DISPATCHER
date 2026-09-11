@@ -66,7 +66,9 @@ function LookupSelect({
   lookup,
   ...rest
 }: { lookup: string } & Record<string, unknown>) {
-  const { data, isFetching } = useLookupQuery(lookup);
+  const { data, isFetching, isLoading } = useLookupQuery(lookup, {
+    refetchOnMountOrArgChange: true,
+  });
   const options = useMemo(
     () =>
       (data ?? []).map((x) => ({
@@ -79,7 +81,7 @@ function LookupSelect({
     <Select
       showSearch
       optionFilterProp="label"
-      loading={isFetching}
+      loading={isLoading || isFetching}
       options={options}
       allowClear
       {...rest}
@@ -105,7 +107,10 @@ export default function CatalogPage({
   const [current, setCurrent] = useState<Record<string, unknown> | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const extra = showInactive ? "activeOnly=false" : undefined;
-  const { data, isFetching } = useListQuery({ path, page, search, extra });
+  const { data, isFetching } = useListQuery(
+    { path, page, search, extra },
+    { refetchOnMountOrArgChange: true },
+  );
   const [create, createState] = useCreateMutation();
   const [update, updateState] = useUpdateMutation();
   const [remove] = useRemoveMutation();

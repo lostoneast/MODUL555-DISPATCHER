@@ -52,10 +52,13 @@ const injected = api.injectEndpoints({
     }),
     lookup: build.query<LookupItem[], string>({
       query: (entity) => `/lookups/${entity}`,
+      providesTags: (_r, _e, entity) => [{ type: "Lookup", id: entity }],
+      // После создания связанной сущности (завод → линия) нужен свежий список.
+      keepUnusedDataFor: 0,
     }),
     create: build.mutation<unknown, { path: string; body: unknown }>({
       query: ({ path, body }) => ({ url: `/${path}`, method: "POST", body }),
-      invalidatesTags: (_r, _e, arg) => [{ type: "Catalog", id: arg.path }],
+      invalidatesTags: ["Catalog", "Lookup"],
     }),
     update: build.mutation<unknown, { path: string; id: string; body: unknown }>({
       query: ({ path, id, body }) => ({
@@ -63,18 +66,18 @@ const injected = api.injectEndpoints({
         method: "PUT",
         body,
       }),
-      invalidatesTags: (_r, _e, arg) => [{ type: "Catalog", id: arg.path }],
+      invalidatesTags: ["Catalog", "Lookup"],
     }),
     remove: build.mutation<void, { path: string; id: string }>({
       query: ({ path, id }) => ({ url: `/${path}/${id}`, method: "DELETE" }),
-      invalidatesTags: (_r, _e, arg) => [{ type: "Catalog", id: arg.path }],
+      invalidatesTags: ["Catalog", "Lookup"],
     }),
     activate: build.mutation<void, { path: string; id: string }>({
       query: ({ path, id }) => ({
         url: `/${path}/${id}/activate`,
         method: "POST",
       }),
-      invalidatesTags: (_r, _e, arg) => [{ type: "Catalog", id: arg.path }],
+      invalidatesTags: ["Catalog", "Lookup"],
     }),
     importExcel: build.mutation<ImportResult, { path: string; file: File }>({
       query: ({ path, file }) => {
@@ -82,7 +85,7 @@ const injected = api.injectEndpoints({
         body.append("file", file);
         return { url: `/${path}/import`, method: "POST", body };
       },
-      invalidatesTags: (_r, _e, arg) => [{ type: "Catalog", id: arg.path }],
+      invalidatesTags: ["Catalog", "Lookup"],
     }),
   }),
 });
