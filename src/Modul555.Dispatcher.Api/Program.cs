@@ -4,10 +4,16 @@ using System.Text.Json;
 using DispatcherApp.Application.Auth;
 using DispatcherApp.Application.Services;
 using DispatcherApp.Auth;
+using DispatcherApp.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var connection =
+    builder.Configuration.GetConnectionString("Default")
+    ?? "Host=localhost;Port=5432;Database=modul555_dispatcher;Username=dispatcher;Password=dispatcher";
 
 var keycloakAuthority =
     builder.Configuration["Keycloak:Authority"]
@@ -15,6 +21,7 @@ var keycloakAuthority =
 var keycloakAudience = builder.Configuration["Keycloak:Audience"];
 var keycloakUserInfo = $"{keycloakAuthority.TrimEnd('/')}/protocol/openid-connect/userinfo";
 
+builder.Services.AddDbContext<DispatcherDbContext>(o => o.UseNpgsql(connection));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient("keycloak");
 builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
@@ -126,7 +133,7 @@ builder
                         }
                         catch
                         {
-                            // залупа
+                            /* userinfo optional enrichment */
                         }
                     }
                 }
@@ -156,6 +163,12 @@ builder.Services.AddCors(o =>
 );
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DispatcherDbContext>();
+    await db.Database.MigrateAsync();
+}
 
 if (app.Environment.IsDevelopment())
 {

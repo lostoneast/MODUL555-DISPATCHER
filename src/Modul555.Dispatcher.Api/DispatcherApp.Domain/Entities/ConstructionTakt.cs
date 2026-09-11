@@ -45,7 +45,7 @@ public class ConstructionTakt
     public long Version { get; set; }
 
 
-    public ICollection<TaktAssignment> ProductAssignments { get; set; }
+    public ICollection<TaktAssignment> TaktAssignments { get; set; }
         = new List<TaktAssignment>();
 
     public ICollection<DemandRevision> DemandRevisions { get; set; }

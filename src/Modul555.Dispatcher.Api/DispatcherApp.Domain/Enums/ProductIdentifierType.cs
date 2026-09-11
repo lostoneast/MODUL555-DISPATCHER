@@ -7,4 +7,5 @@ public enum ProductIdentifierType
     QrCode = 20,
     Barcode = 30,
     Rfid = 40,
+    Erp = 50,
 }

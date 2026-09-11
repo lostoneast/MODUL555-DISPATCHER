@@ -76,4 +76,8 @@ public class DemandRevision
     /// Стабильный идентификатор пользователя из Keycloak.
     /// </summary>
     public string? CreatedByUserId { get; set; }
+
+
+    public ICollection<ProductionAssignment> ProductionAssignments { get; set; }
+        = new List<ProductionAssignment>();
 }

@@ -14,4 +14,7 @@ public class ProductType
 
     public ICollection<Product> Products { get; set; }
         = new List<Product>();
+
+    public ICollection<LineCapability> LineCapabilities { get; set; }
+        = new List<LineCapability>();
 }
