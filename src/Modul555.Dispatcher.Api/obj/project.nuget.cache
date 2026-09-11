@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "MKc091w46Qc=",
+  "success": true,
+  "projectFilePath": "/Users/adri/Projects/zpk/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/DispatcherApp.csproj",
+  "expectedPackageFiles": [
+    "/Users/adri/.nuget/packages/microsoft.aspnetcore.openapi/10.0.12/microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512",
+    "/Users/adri/.nuget/packages/microsoft.openapi/2.12.0/microsoft.openapi.2.12.0.nupkg.sha512"
+  ],
+  "logs": []
+}
