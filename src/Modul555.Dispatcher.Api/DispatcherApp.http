@@ -1,6 +1,30 @@
 @DispatcherApp_HostAddress = http://localhost:5123
+@token =
 
-GET {{DispatcherApp_HostAddress}}/weatherforecast/
-Accept: application/json
+### Login
+POST {{DispatcherApp_HostAddress}}/api/auth/login
+Content-Type: application/json
 
-###
+{
+  "userName": "admin",
+  "password": "admin"
+}
+
+### Me
+GET {{DispatcherApp_HostAddress}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### Private data
+GET {{DispatcherApp_HostAddress}}/api/data/private
+Authorization: Bearer {{token}}
+
+### Public data
+GET {{DispatcherApp_HostAddress}}/api/data/public
+
+### Refresh
+POST {{DispatcherApp_HostAddress}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": ""
+}

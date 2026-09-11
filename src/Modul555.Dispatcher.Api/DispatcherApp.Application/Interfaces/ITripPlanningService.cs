@@ -1,3 +1,5 @@
+using DispatcherApp.Domain.Entities;
+
 namespace DispatcherApp.Application.Interfaces;
 
 public interface ITripPlanningService

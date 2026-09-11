@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/adri/Projects/zpk/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/DispatcherApp.csproj": {}
+    "/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/DispatcherApp.csproj": {}
   },
   "projects": {
-    "/Users/adri/Projects/zpk/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/DispatcherApp.csproj": {
+    "/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/DispatcherApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/adri/Projects/zpk/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/DispatcherApp.csproj",
+        "projectUniqueName": "/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/DispatcherApp.csproj",
         "projectName": "DispatcherApp",
-        "projectPath": "/Users/adri/Projects/zpk/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/DispatcherApp.csproj",
-        "packagesPath": "/Users/adri/.nuget/packages/",
-        "outputPath": "/Users/adri/Projects/zpk/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/obj/",
+        "projectPath": "/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/DispatcherApp.csproj",
+        "packagesPath": "/home/sgkabardin/.nuget/packages/",
+        "outputPath": "/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/adri/.nuget/NuGet/NuGet.Config"
+          "/home/sgkabardin/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -39,13 +39,17 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.400"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net10.0": {
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[10.0.12, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.12, )"
@@ -70,7 +74,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.401/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.302/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
