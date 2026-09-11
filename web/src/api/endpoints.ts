@@ -87,6 +87,56 @@ const injected = api.injectEndpoints({
       },
       invalidatesTags: ["Catalog", "Lookup"],
     }),
+
+    adminOverview: build.query<
+      {
+        products: number;
+        productTypes: number;
+        plants: number;
+        productionLines: number;
+        constructionObjects: number;
+        constructionTakts: number;
+        vehicles: number;
+        storageAreas: number;
+        trips: number;
+        auditEvents: number;
+      },
+      void
+    >({
+      query: () => "/admin/overview",
+    }),
+    adminRoles: build.query<{ value: string; label: string }[], void>({
+      query: () => "/admin/roles",
+    }),
+    adminAudit: build.query<
+      Paged<{
+        id: number;
+        timestamp: string;
+        userId?: string;
+        userName?: string;
+        entityType: string;
+        entityId: string;
+        action: string;
+        comment?: string;
+        source: string;
+        correlationId?: string;
+      }>,
+      { page?: number; search?: string }
+    >({
+      query: ({ page = 1, search }) => {
+        const p = new URLSearchParams({ page: String(page), pageSize: "20" });
+        if (search) p.set("search", search);
+        return `/admin/audit?${p}`;
+      },
+    }),
+    clearDemo: build.mutation<{ message: string; affected: number }, void>({
+      query: () => ({ url: "/admin/demo/clear", method: "POST" }),
+      invalidatesTags: ["Catalog", "Lookup"],
+    }),
+    seedDemo: build.mutation<{ message: string; affected: number }, void>({
+      query: () => ({ url: "/admin/demo/seed", method: "POST" }),
+      invalidatesTags: ["Catalog", "Lookup"],
+    }),
   }),
 });
 
@@ -100,6 +150,11 @@ export const {
   useRemoveMutation,
   useActivateMutation,
   useImportExcelMutation,
+  useAdminOverviewQuery,
+  useAdminRolesQuery,
+  useAdminAuditQuery,
+  useClearDemoMutation,
+  useSeedDemoMutation,
 } = injected;
 
 /** Download Excel export with current auth token. */

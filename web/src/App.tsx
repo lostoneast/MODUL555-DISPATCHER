@@ -20,10 +20,24 @@ import {
   VehiclesPage,
   VehicleTypesPage,
 } from "./pages/catalogs";
+import {
+  AdminHomePage,
+  AdminRolesPage,
+  AuditAdminPage,
+} from "./pages/AdminPages";
+
+function isAdminRole(roles: string[] | undefined) {
+  return !!roles?.some((r) => r === "admin" || r === "manager");
+}
 
 function RequireAuth() {
   const token = useSelector((s: RootState) => s.auth.token);
   return token ? <Outlet /> : <Navigate to="/login" replace />;
+}
+
+function RequireAdmin() {
+  const user = useSelector((s: RootState) => s.auth.user);
+  return isAdminRole(user?.roles) ? <Outlet /> : <Navigate to="/" replace />;
 }
 
 export default function App() {
@@ -50,6 +64,12 @@ export default function App() {
           <Route path="/vehicle-types" element={<VehicleTypesPage />} />
           <Route path="/vehicles" element={<VehiclesPage />} />
           <Route path="/transport-routes" element={<TransportRoutesPage />} />
+
+          <Route element={<RequireAdmin />}>
+            <Route path="/admin" element={<AdminHomePage />} />
+            <Route path="/admin/roles" element={<AdminRolesPage />} />
+            <Route path="/admin/audit" element={<AuditAdminPage />} />
+          </Route>
         </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

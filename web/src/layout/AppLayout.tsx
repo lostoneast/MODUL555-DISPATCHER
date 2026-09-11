@@ -6,31 +6,79 @@ import {
   DatabaseOutlined,
   LogoutOutlined,
   BuildOutlined,
+  SettingOutlined,
+  AuditOutlined,
+  TeamOutlined,
 } from "@ant-design/icons";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { MenuProps } from "antd";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Logo } from "../components/Logo";
 import { loggedOut } from "../features/auth/authSlice";
 import type { RootState } from "../store";
 import { brand } from "../theme";
+
+function isAdmin(roles: string[] | undefined) {
+  return !!roles?.some((r) => r === "admin" || r === "manager");
+}
+
+function sectionForPath(pathname: string): string | null {
+  if (pathname.startsWith("/admin")) return "admin";
+  if (
+    ["/product-types", "/plants", "/production-lines", "/line-capabilities"].some(
+      (p) => pathname === p || pathname.startsWith(p + "/"),
+    )
+  )
+    return "production";
+  if (
+    [
+      "/construction-objects",
+      "/building-sections",
+      "/floors",
+      "/unloading-points",
+      "/construction-takts",
+    ].some((p) => pathname === p || pathname.startsWith(p + "/"))
+  )
+    return "construction";
+  if (pathname.startsWith("/storage")) return "storage";
+  if (
+    ["/carriers", "/vehicle-types", "/vehicles", "/transport-routes"].some(
+      (p) => pathname === p || pathname.startsWith(p + "/"),
+    )
+  )
+    return "logistics";
+  return null;
+}
 
 export default function AppLayout() {
   const location = useLocation();
   const user = useSelector((s: RootState) => s.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const admin = isAdmin(user?.roles);
 
-  const items: MenuProps["items"] = useMemo(
-    () => [
+  const [openKeys, setOpenKeys] = useState<string[]>(() => {
+    const s = sectionForPath(location.pathname);
+    return s ? [s] : ["production"];
+  });
+
+  useEffect(() => {
+    const s = sectionForPath(location.pathname);
+    if (s)
+      setOpenKeys((prev) => (prev.includes(s) ? prev : [...prev, s]));
+  }, [location.pathname]);
+
+  const items: MenuProps["items"] = useMemo(() => {
+    const base: MenuProps["items"] = [
       {
         key: "/",
         icon: <AppstoreOutlined />,
         label: <Link to="/">Изделия</Link>,
       },
       {
-        type: "group",
+        key: "production",
+        icon: <BankOutlined />,
         label: "Производство",
         children: [
           {
@@ -39,7 +87,6 @@ export default function AppLayout() {
           },
           {
             key: "/plants",
-            icon: <BankOutlined />,
             label: <Link to="/plants">Заводы</Link>,
           },
           {
@@ -53,12 +100,12 @@ export default function AppLayout() {
         ],
       },
       {
-        type: "group",
+        key: "construction",
+        icon: <BuildOutlined />,
         label: "Строительство",
         children: [
           {
             key: "/construction-objects",
-            icon: <BuildOutlined />,
             label: <Link to="/construction-objects">Объекты</Link>,
           },
           {
@@ -80,23 +127,23 @@ export default function AppLayout() {
         ],
       },
       {
-        type: "group",
+        key: "storage",
+        icon: <DatabaseOutlined />,
         label: "Склад",
         children: [
           {
             key: "/storage-areas",
-            icon: <DatabaseOutlined />,
             label: <Link to="/storage-areas">Склады</Link>,
           },
         ],
       },
       {
-        type: "group",
+        key: "logistics",
+        icon: <CarOutlined />,
         label: "Логистика",
         children: [
           {
             key: "/carriers",
-            icon: <CarOutlined />,
             label: <Link to="/carriers">Перевозчики</Link>,
           },
           {
@@ -113,9 +160,34 @@ export default function AppLayout() {
           },
         ],
       },
-    ],
-    [],
-  );
+    ];
+
+    if (admin) {
+      base!.push({
+        key: "admin",
+        icon: <SettingOutlined />,
+        label: "Администрирование",
+        children: [
+          {
+            key: "/admin",
+            label: <Link to="/admin">Обзор</Link>,
+          },
+          {
+            key: "/admin/roles",
+            icon: <TeamOutlined />,
+            label: <Link to="/admin/roles">Роли</Link>,
+          },
+          {
+            key: "/admin/audit",
+            icon: <AuditOutlined />,
+            label: <Link to="/admin/audit">Журнал аудита</Link>,
+          },
+        ],
+      });
+    }
+
+    return base;
+  }, [admin]);
 
   return (
     <Layout style={{ minHeight: "100vh" }} hasSider>
@@ -151,6 +223,8 @@ export default function AppLayout() {
           theme="dark"
           mode="inline"
           selectedKeys={[location.pathname]}
+          openKeys={openKeys}
+          onOpenChange={(keys) => setOpenKeys(keys as string[])}
           items={items}
           style={{ background: brand.deepBlue, borderInlineEnd: "none" }}
         />
