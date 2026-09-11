@@ -1,0 +1,12 @@
+.git
+.cursor
+**/bin
+**/obj
+**/node_modules
+**/dist
+web/node_modules
+web/dist
+*.md
+.env
+.env.*
+!.env.example

@@ -5,6 +5,7 @@ using DispatcherApp.Application.Auth;
 using DispatcherApp.Application.Services;
 using DispatcherApp.Auth;
 using DispatcherApp.Infrastructure.Persistence;
+using DispatcherApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +27,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient("keycloak");
 builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<CatalogService>();
 
 builder
     .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

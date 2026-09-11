@@ -1,5 +1,12 @@
 import { Layout, Menu, Dropdown, Typography, Badge } from "antd";
-import { DashboardOutlined, LogoutOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  BankOutlined,
+  CarOutlined,
+  DatabaseOutlined,
+  LogoutOutlined,
+  BuildOutlined,
+} from "@ant-design/icons";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { MenuProps } from "antd";
@@ -19,8 +26,92 @@ export default function AppLayout() {
     () => [
       {
         key: "/",
-        icon: <DashboardOutlined />,
+        icon: <AppstoreOutlined />,
         label: <Link to="/">Изделия</Link>,
+      },
+      {
+        type: "group",
+        label: "Производство",
+        children: [
+          {
+            key: "/product-types",
+            label: <Link to="/product-types">Типы изделий</Link>,
+          },
+          {
+            key: "/plants",
+            icon: <BankOutlined />,
+            label: <Link to="/plants">Заводы</Link>,
+          },
+          {
+            key: "/production-lines",
+            label: <Link to="/production-lines">Линии</Link>,
+          },
+          {
+            key: "/line-capabilities",
+            label: <Link to="/line-capabilities">Возможности линий</Link>,
+          },
+        ],
+      },
+      {
+        type: "group",
+        label: "Строительство",
+        children: [
+          {
+            key: "/construction-objects",
+            icon: <BuildOutlined />,
+            label: <Link to="/construction-objects">Объекты</Link>,
+          },
+          {
+            key: "/building-sections",
+            label: <Link to="/building-sections">Секции</Link>,
+          },
+          {
+            key: "/floors",
+            label: <Link to="/floors">Этажи</Link>,
+          },
+          {
+            key: "/unloading-points",
+            label: <Link to="/unloading-points">Точки разгрузки</Link>,
+          },
+          {
+            key: "/construction-takts",
+            label: <Link to="/construction-takts">Такты</Link>,
+          },
+        ],
+      },
+      {
+        type: "group",
+        label: "Склад",
+        children: [
+          {
+            key: "/storage-areas",
+            icon: <DatabaseOutlined />,
+            label: <Link to="/storage-areas">Склады</Link>,
+          },
+        ],
+      },
+      {
+        type: "group",
+        label: "Логистика",
+        children: [
+          {
+            key: "/carriers",
+            icon: <CarOutlined />,
+            label: <Link to="/carriers">Перевозчики</Link>,
+          },
+          {
+            key: "/vehicle-types",
+            label: <Link to="/vehicle-types">Типы ТС</Link>,
+          },
+          {
+            key: "/vehicles",
+            label: <Link to="/vehicles">Транспорт</Link>,
+          },
+          {
+            key: "/transport-routes",
+            label: <Link to="/transport-routes">Маршруты</Link>,
+          },
+        ],
       },
     ],
     [],

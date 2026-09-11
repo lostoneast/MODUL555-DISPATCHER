@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../store";
 import { loggedOut, tokenReceived } from "../features/auth/authSlice";
 
-export const TAGS = ["PrivateData"] as const;
+export const TAGS = ["Catalog"] as const;
 
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: "/api",

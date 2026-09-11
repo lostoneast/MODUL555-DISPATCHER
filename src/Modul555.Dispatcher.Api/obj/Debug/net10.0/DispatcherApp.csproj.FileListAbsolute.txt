@@ -163,3 +163,11 @@
 /home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/tr/Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 /home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 /home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
+/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/ClosedXML.dll
+/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/ClosedXML.Parser.dll
+/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/DocumentFormat.OpenXml.dll
+/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/DocumentFormat.OpenXml.Framework.dll
+/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/ExcelNumberFormat.dll
+/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/RBush.dll
+/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/SixLabors.Fonts.dll
+/home/sgkabardin/Projects/MODUL555-DISPATCHER/src/Modul555.Dispatcher.Api/bin/Debug/net10.0/System.IO.Packaging.dll
