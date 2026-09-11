@@ -1,1 +1,58 @@
-/.DS_Store
+## .NET
+bin/
+obj/
+*.user
+*.suo
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+
+## Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+
+## Editors / IDE
+.vs/
+.idea/
+*.swp
+*.swo
+*~
+
+## Cursor / agent tooling
+.cursor/
+.cursor-*/
+.cursorrules
+AGENTS.md
+.agent/
+.agents/
+.claude/
+.codex/
+.windsurf/
+.continue/
+.aider*
+.copilot/
+*.prompt
+*.prompts
+prompts/
+agent-transcripts/
+terminals/
+
+## Environment & secrets
+.env
+.env.*
+!.env.example
+.env.local
+appsettings.Development.local.json
+*.pem
+*.key
+
+## Logs & temp
+*.log
+npm-debug.log*
+tmp/
+temp/
+.DS_Store
+Thumbs.db
