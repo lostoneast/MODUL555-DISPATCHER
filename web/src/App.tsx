@@ -6,7 +6,6 @@ import LoginPage from "./pages/LoginPage";
 import {
   BuildingSectionsPage,
   CarriersPage,
-  ConstructionObjectsPage,
   ConstructionTaktsPage,
   FloorsPage,
   LineCapabilitiesPage,
@@ -19,7 +18,9 @@ import {
   UnloadingPointsPage,
   VehiclesPage,
   VehicleTypesPage,
-} from "./pages/catalogs";
+} from "./pages/catalogs/index";
+import ConstructionObjectDetailPage from "./pages/catalogs/ConstructionObjectDetailPage";
+import { ConstructionObjectsPage } from "./pages/catalogs/ConstructionObjectsPage";
 import {
   AdminHomePage,
   AdminRolesPage,
@@ -46,7 +47,8 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<ProductsPage />} />
+          <Route path="/" element={<Navigate to="/products" replace />} />
+          <Route path="/products" element={<ProductsPage />} />
           <Route path="/product-types" element={<ProductTypesPage />} />
           <Route path="/plants" element={<PlantsPage />} />
           <Route path="/production-lines" element={<ProductionLinesPage />} />
@@ -54,6 +56,14 @@ export default function App() {
           <Route
             path="/construction-objects"
             element={<ConstructionObjectsPage />}
+          />
+          <Route
+            path="/construction-objects/new"
+            element={<ConstructionObjectsPage autoOpen />}
+          />
+          <Route
+            path="/construction-objects/:id"
+            element={<ConstructionObjectDetailPage />}
           />
           <Route path="/building-sections" element={<BuildingSectionsPage />} />
           <Route path="/floors" element={<FloorsPage />} />

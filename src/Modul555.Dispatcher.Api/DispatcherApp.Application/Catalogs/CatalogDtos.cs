@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using DispatcherApp.Domain.Enums;
 
 namespace DispatcherApp.Application.Catalogs;
@@ -13,7 +14,9 @@ public sealed class ProductTypeDto
 
 public sealed class ProductTypeWriteDto
 {
+    [Required]
     public string Code { get; set; } = "";
+    [Required]
     public string Name { get; set; } = "";
     public string? Description { get; set; }
     public bool IsActive { get; set; } = true;
@@ -30,8 +33,11 @@ public sealed class PlantDto
 
 public sealed class PlantWriteDto
 {
+    [Required]
     public string Code { get; set; } = "";
+    [Required]
     public string Name { get; set; } = "";
+    [Required]
     public string Address { get; set; } = "";
     public bool IsActive { get; set; } = true;
 }
@@ -49,7 +55,9 @@ public sealed class ProductionLineDto
 public sealed class ProductionLineWriteDto
 {
     public int PlantId { get; set; }
+    [Required]
     public string Code { get; set; } = "";
+    [Required]
     public string Name { get; set; } = "";
     public bool IsActive { get; set; } = true;
 }
@@ -75,18 +83,28 @@ public sealed class LineCapabilityWriteDto
 
 public sealed class ConstructionObjectDto
 {
+    public int SectionsCount { get; set; }
+    public int FloorsCount { get; set; }
+    public int TaktsCount { get; set; }
     public int Id { get; set; }
     public string Code { get; set; } = "";
     public string Name { get; set; } = "";
     public string Address { get; set; } = "";
+    public DateOnly? StartDate { get; set; }
+    public DateOnly? EndDate { get; set; }
     public bool IsActive { get; set; }
 }
 
-public sealed class ConstructionObjectWriteDto
+public class ConstructionObjectWriteDto
 {
+    [Required]
     public string Code { get; set; } = "";
+    [Required]
     public string Name { get; set; } = "";
+    [Required]
     public string Address { get; set; } = "";
+    public DateOnly? StartDate { get; set; }
+    public DateOnly? EndDate { get; set; }
     public bool IsActive { get; set; } = true;
 }
 
@@ -103,7 +121,9 @@ public sealed class BuildingSectionDto
 public sealed class BuildingSectionWriteDto
 {
     public int ConstructionObjectId { get; set; }
+    [Required]
     public string Code { get; set; } = "";
+    [Required]
     public string Name { get; set; } = "";
     public int SortOrder { get; set; }
 }
@@ -122,6 +142,7 @@ public sealed class FloorWriteDto
 {
     public int BuildingSectionId { get; set; }
     public int? Number { get; set; }
+    [Required]
     public string Name { get; set; } = "";
     public int SortOrder { get; set; }
 }
@@ -139,6 +160,7 @@ public sealed class UnloadingPointDto
 public sealed class UnloadingPointWriteDto
 {
     public int ConstructionObjectId { get; set; }
+    [Required]
     public string Name { get; set; } = "";
     public string? Description { get; set; }
     public bool IsActive { get; set; } = true;
@@ -160,6 +182,7 @@ public sealed class StorageAreaWriteDto
 {
     public int? PlantId { get; set; }
     public int? ConstructionObjectId { get; set; }
+    [Required]
     public string Name { get; set; } = "";
     public int CapacityUnits { get; set; }
     public bool IsActive { get; set; } = true;
@@ -175,6 +198,7 @@ public sealed class CarrierDto
 
 public sealed class CarrierWriteDto
 {
+    [Required]
     public string Name { get; set; } = "";
     public string? ContactInfo { get; set; }
     public bool IsActive { get; set; } = true;
@@ -200,6 +224,7 @@ public sealed class VehicleTypeDto
 
 public sealed class VehicleTypeWriteDto
 {
+    [Required]
     public string Name { get; set; } = "";
     public string? RollingStockType { get; set; }
     public decimal? MinPayloadKg { get; set; }
@@ -233,8 +258,11 @@ public sealed class VehicleWriteDto
 {
     public int VehicleTypeId { get; set; }
     public int CarrierId { get; set; }
+    [Required]
     public string Make { get; set; } = "";
+    [Required]
     public string Model { get; set; } = "";
+    [Required]
     public string RegistrationNumber { get; set; } = "";
     public bool IsActive { get; set; } = true;
     public string? Notes { get; set; }
@@ -281,7 +309,9 @@ public sealed class ConstructionTaktDto
 public sealed class ConstructionTaktWriteDto
 {
     public int ConstructionObjectId { get; set; }
+    [Required]
     public string Code { get; set; } = "";
+    [Required]
     public string Name { get; set; } = "";
     public int Sequence { get; set; }
     public DateOnly PlannedProductionStartDate { get; set; }
@@ -314,8 +344,10 @@ public sealed class ProductDto
 
 public sealed class ProductWriteDto
 {
+    [Required]
     public string ProductCode { get; set; } = "";
     public int ProductTypeId { get; set; }
+    [Required]
     public string Mark { get; set; } = "";
     public decimal WidthMm { get; set; }
     public decimal HeightMm { get; set; }
@@ -329,4 +361,15 @@ public sealed class ProductWriteDto
     public decimal? WeightKg { get; set; }
     public ProductStatus Status { get; set; } = ProductStatus.Created;
     public string? AdditionalInfo { get; set; }
+}
+
+public sealed class ConstructionObjectCreateDto : ConstructionObjectWriteDto
+{
+    [Range(0, 50)]
+    public int SectionsCount { get; set; }
+    [Range(0, 100)]
+    public int FloorsCount { get; set; }
+    [Range(0, 1000)]
+    public int TaktsCount { get; set; }
+    public bool AutoAddFloors { get; set; }
 }

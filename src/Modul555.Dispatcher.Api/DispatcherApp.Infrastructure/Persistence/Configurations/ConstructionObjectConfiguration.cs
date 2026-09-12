@@ -14,6 +14,8 @@ internal sealed class ConstructionObjectConfiguration : IEntityTypeConfiguration
         builder.Property(x => x.Code).HasMaxLength(64).IsRequired();
         builder.Property(x => x.Name).HasMaxLength(256).IsRequired();
         builder.Property(x => x.Address).HasMaxLength(512).IsRequired();
+        builder.Property(x => x.StartDate).HasColumnType("date");
+        builder.Property(x => x.EndDate).HasColumnType("date");
         builder.HasIndex(x => x.Code).IsUnique();
     }
 }

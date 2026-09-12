@@ -480,26 +480,74 @@ public sealed class CatalogService
             Code = x.Code,
             Name = x.Name,
             Address = x.Address,
+            StartDate = x.StartDate,
+            EndDate = x.EndDate,
             IsActive = x.IsActive,
+            SectionsCount = x.Sections.Count,
+            FloorsCount = x.Sections.SelectMany(section => section.Floors).Count(),
+            TaktsCount = _db.ConstructionTakts.Count(takt => takt.ConstructionObjectId == x.Id),
         });
         return await PageAsync(projected, page, pageSize, ct);
     }
 
+    public async Task<ConstructionObjectDto> GetConstructionObjectAsync(int id, CancellationToken ct = default)
+    {
+        var entity = await _db.ConstructionObjects.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, ct)
+            ?? throw new KeyNotFoundException($"ConstructionObject {id} not found.");
+        var dto = MapConstructionObject(entity);
+        dto.SectionsCount = await _db.BuildingSections.CountAsync(x => x.ConstructionObjectId == id, ct);
+        dto.FloorsCount = await _db.Floors.CountAsync(x => x.BuildingSection.ConstructionObjectId == id, ct);
+        dto.TaktsCount = await _db.ConstructionTakts.CountAsync(x => x.ConstructionObjectId == id, ct);
+        return dto;
+    }
+
     public async Task<ConstructionObjectDto> CreateConstructionObjectAsync(
-        ConstructionObjectWriteDto dto,
+        ConstructionObjectCreateDto dto,
         CancellationToken ct = default
     )
     {
+        ValidateConstructionObjectDates(dto);
+        if (dto.SectionsCount is < 0 or > 50 || dto.FloorsCount is < 0 or > 100 || dto.TaktsCount is < 0 or > 1000)
+            throw new ArgumentException("Недопустимое количество секций, этажей или тактов.");
+        if (dto.AutoAddFloors && dto.FloorsCount > 0 && dto.SectionsCount == 0)
+            throw new ArgumentException("Для создания этажей укажите количество секций.");
+        if (dto.TaktsCount > 0 && (dto.StartDate is null || dto.EndDate is null))
+            throw new ArgumentException("Для создания тактов укажите даты начала и окончания.");
         var entity = new ConstructionObject
         {
             Code = dto.Code.Trim(),
             Name = dto.Name.Trim(),
             Address = dto.Address.Trim(),
+            StartDate = dto.StartDate,
+            EndDate = dto.EndDate,
             IsActive = dto.IsActive,
         };
+        for (var sectionNumber = 1; sectionNumber <= dto.SectionsCount; sectionNumber++)
+        {
+            var section = new BuildingSection
+            {
+                Code = $"S{sectionNumber}", Name = $"Секция {sectionNumber}", SortOrder = sectionNumber,
+            };
+            if (dto.AutoAddFloors)
+                for (var floorNumber = 1; floorNumber <= dto.FloorsCount; floorNumber++)
+                    section.Floors.Add(new Floor
+                    {
+                        Number = floorNumber, Name = $"Этаж {floorNumber}", SortOrder = floorNumber,
+                    });
+            entity.Sections.Add(section);
+        }
         _db.ConstructionObjects.Add(entity);
+        var now = DateTimeOffset.UtcNow;
+        for (var sequence = 1; sequence <= dto.TaktsCount; sequence++)
+            _db.ConstructionTakts.Add(new ConstructionTakt
+            {
+                ConstructionObject = entity, Code = $"T{sequence}", Name = $"Такт {sequence}", Sequence = sequence,
+                PlannedProductionStartDate = dto.StartDate!.Value,
+                PlannedProductionEndDate = dto.EndDate!.Value,
+                Status = ConstructionTaktStatus.Draft, CreatedAt = now, UpdatedAt = now, Version = 1,
+            });
         await _db.SaveChangesAsync(ct);
-        return MapConstructionObject(entity);
+        return await GetConstructionObjectAsync(entity.Id, ct);
     }
 
     public async Task<ConstructionObjectDto> UpdateConstructionObjectAsync(
@@ -508,15 +556,24 @@ public sealed class CatalogService
         CancellationToken ct = default
     )
     {
+        ValidateConstructionObjectDates(dto);
         var entity =
             await _db.ConstructionObjects.FirstOrDefaultAsync(x => x.Id == id, ct)
             ?? throw new KeyNotFoundException($"ConstructionObject {id} not found.");
         entity.Code = dto.Code.Trim();
         entity.Name = dto.Name.Trim();
         entity.Address = dto.Address.Trim();
+        entity.StartDate = dto.StartDate;
+        entity.EndDate = dto.EndDate;
         entity.IsActive = dto.IsActive;
         await _db.SaveChangesAsync(ct);
-        return MapConstructionObject(entity);
+        return await GetConstructionObjectAsync(entity.Id, ct);
+    }
+
+    private static void ValidateConstructionObjectDates(ConstructionObjectWriteDto dto)
+    {
+        if (dto.StartDate.HasValue && dto.EndDate.HasValue && dto.StartDate > dto.EndDate)
+            throw new ArgumentException("Дата окончания не может быть раньше даты начала.");
     }
 
     public async Task DeactivateConstructionObjectAsync(int id, CancellationToken ct = default)
@@ -544,6 +601,8 @@ public sealed class CatalogService
             Code = x.Code,
             Name = x.Name,
             Address = x.Address,
+            StartDate = x.StartDate,
+            EndDate = x.EndDate,
             IsActive = x.IsActive,
         };
 
@@ -1993,11 +2052,13 @@ public sealed class CatalogService
                 var code = ExcelHelper.GetString(row, "Code");
                 if (string.IsNullOrWhiteSpace(code))
                     throw new ArgumentException("Code is required.");
-                var dto = new ConstructionObjectWriteDto
+                var dto = new ConstructionObjectCreateDto
                 {
                     Code = code,
                     Name = ExcelHelper.GetString(row, "Name"),
                     Address = ExcelHelper.GetString(row, "Address"),
+                    StartDate = ExcelHelper.GetDateOnly(row, "StartDate"),
+                    EndDate = ExcelHelper.GetDateOnly(row, "EndDate"),
                     IsActive = ExcelHelper.GetBool(row, "IsActive") ?? true,
                 };
                 var existing = await _db.ConstructionObjects.FirstOrDefaultAsync(

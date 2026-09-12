@@ -46,18 +46,27 @@ const injected = api.injectEndpoints({
             const [k, v] = p.split("=");
             if (k && v) params.set(k, decodeURIComponent(v));
           });
+
         return `/${path}?${params}`;
       },
       providesTags: (_r, _e, arg) => [{ type: "Catalog", id: arg.path }],
     }),
+    constructionObject: build.query<Record<string, unknown>, string>({
+      query: (id) => `/construction-objects/${encodeURIComponent(id)}`,
+      providesTags: [{ type: "Catalog", id: "construction-objects" }],
+    }),
     lookup: build.query<LookupItem[], string>({
-      query: (entity) => `/lookups/${entity}`,
+      query: (entity) => `/${entity}/lookups`,
       providesTags: (_r, _e, entity) => [{ type: "Lookup", id: entity }],
       // После создания связанной сущности (завод → линия) нужен свежий список.
       keepUnusedDataFor: 0,
     }),
     create: build.mutation<unknown, { path: string; body: unknown }>({
-      query: ({ path, body }) => ({ url: `/${path}`, method: "POST", body }),
+      query: ({ path, body }) => ({
+        url: `/${path}`,
+        method: "POST",
+        body,
+      }),
       invalidatesTags: ["Catalog", "Lookup"],
     }),
     update: build.mutation<unknown, { path: string; id: string; body: unknown }>({
@@ -69,7 +78,10 @@ const injected = api.injectEndpoints({
       invalidatesTags: ["Catalog", "Lookup"],
     }),
     remove: build.mutation<void, { path: string; id: string }>({
-      query: ({ path, id }) => ({ url: `/${path}/${id}`, method: "DELETE" }),
+      query: ({ path, id }) => ({
+        url: `/${path}/${id}`,
+        method: "DELETE",
+      }),
       invalidatesTags: ["Catalog", "Lookup"],
     }),
     activate: build.mutation<void, { path: string; id: string }>({
@@ -144,6 +156,7 @@ export const {
   useLoginMutation,
   useMeQuery,
   useListQuery,
+  useConstructionObjectQuery,
   useLookupQuery,
   useCreateMutation,
   useUpdateMutation,

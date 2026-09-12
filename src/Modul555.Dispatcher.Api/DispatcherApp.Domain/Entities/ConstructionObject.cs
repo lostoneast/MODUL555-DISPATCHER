@@ -10,6 +10,10 @@ public class ConstructionObject
 
     public string Address { get; set; } = null!;
 
+    public DateOnly? StartDate { get; set; }
+
+    public DateOnly? EndDate { get; set; }
+
     public bool IsActive { get; set; } = true;
 
 

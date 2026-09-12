@@ -33,6 +33,7 @@ function sectionForPath(pathname: string): string | null {
     return "production";
   if (
     [
+      "/construction-objects/new",
       "/construction-objects",
       "/building-sections",
       "/floors",
@@ -49,6 +50,52 @@ function sectionForPath(pathname: string): string | null {
   )
     return "logistics";
   return null;
+}
+
+function selectedKeyForPath(pathname: string): string[] {
+  if (pathname.startsWith("/admin")) return [pathname];
+  if (
+    ["/product-types", "/plants", "/production-lines", "/line-capabilities"].some(
+      (p) => pathname === p || pathname.startsWith(p + "/"),
+    )
+  ) {
+    const match = ["/product-types", "/plants", "/production-lines", "/line-capabilities"].find(
+      (p) => pathname === p || pathname.startsWith(p + "/"),
+    );
+    return match ? [match] : ["/"];
+  }
+  if (
+    [
+      "/construction-objects/new",
+      "/construction-objects",
+      "/building-sections",
+      "/floors",
+      "/unloading-points",
+      "/construction-takts",
+    ].some((p) => pathname === p || pathname.startsWith(p + "/"))
+  ) {
+    const match = [
+      "/construction-objects/new",
+      "/construction-objects",
+      "/building-sections",
+      "/floors",
+      "/unloading-points",
+      "/construction-takts",
+    ].find((p) => pathname === p || pathname.startsWith(p + "/"));
+    return match ? [match] : ["/construction-objects"];
+  }
+  if (pathname.startsWith("/storage")) return ["/storage-areas"];
+  if (
+    ["/carriers", "/vehicle-types", "/vehicles", "/transport-routes"].some(
+      (p) => pathname === p || pathname.startsWith(p + "/"),
+    )
+  ) {
+    const match = ["/carriers", "/vehicle-types", "/vehicles", "/transport-routes"].find(
+      (p) => pathname === p || pathname.startsWith(p + "/"),
+    );
+    return match ? [match] : ["/carriers"];
+  }
+  return ["/products"];
 }
 
 export default function AppLayout() {
@@ -72,9 +119,9 @@ export default function AppLayout() {
   const items: MenuProps["items"] = useMemo(() => {
     const base: MenuProps["items"] = [
       {
-        key: "/",
+        key: "/products",
         icon: <AppstoreOutlined />,
-        label: <Link to="/">Изделия</Link>,
+        label: <Link to="/products">Изделия</Link>,
       },
       {
         key: "production",
@@ -107,6 +154,10 @@ export default function AppLayout() {
           {
             key: "/construction-objects",
             label: <Link to="/construction-objects">Объекты</Link>,
+          },
+          {
+            key: "/construction-objects/new",
+            label: <Link to="/construction-objects/new">Добавить объект</Link>,
           },
           {
             key: "/building-sections",
@@ -222,7 +273,7 @@ export default function AppLayout() {
         <Menu
           theme="dark"
           mode="inline"
-          selectedKeys={[location.pathname]}
+          selectedKeys={selectedKeyForPath(location.pathname)}
           openKeys={openKeys}
           onOpenChange={(keys) => setOpenKeys(keys as string[])}
           items={items}
