@@ -320,7 +320,7 @@ public sealed class ConstructionTaktWriteDto
     public string? Comment { get; set; }
 }
 
-public sealed class ProductDto
+public class ProductDto
 {
     public long Id { get; set; }
     public string ProductCode { get; set; } = "";
@@ -342,7 +342,7 @@ public sealed class ProductDto
     public long Version { get; set; }
 }
 
-public sealed class ProductWriteDto
+public class ProductWriteDto
 {
     [Required]
     public string ProductCode { get; set; } = "";

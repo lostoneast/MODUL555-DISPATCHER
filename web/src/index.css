@@ -27,6 +27,16 @@ body {
   background: #f4f6f8;
 }
 
+.object-products > .ant-space-item {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.object-product-editing > td {
+  background: #eaf4ff !important;
+  vertical-align: top;
+}
+
 /* Заголовки групп меню на тёмном сайдере */
 .app-sider .ant-menu-item-group-title {
   color: rgba(255, 255, 255, 0.45);

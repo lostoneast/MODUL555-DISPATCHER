@@ -11,6 +11,8 @@ public sealed class ApiExceptionFilter : IExceptionFilter
     {
         var (status, message) = context.Exception switch
         {
+            DispatcherApp.Application.Common.ConflictException ex => (409, ex.Message),
+            PostgresException { SqlState: "40001" or "40P01" or "23503" } => (409, "Связанные данные изменились. Обновите страницу и повторите операцию."),
             KeyNotFoundException => (404, "Запись не найдена."),
             ArgumentException ex => (400, ex.Message),
             DbUpdateConcurrencyException => (409, "Запись была изменена. Обновите данные и повторите операцию."),

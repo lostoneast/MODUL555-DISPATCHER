@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 
+if (args.Contains("--preview")) { await ObjectWorkspacePreview.RunAsync(); return; }
+
 // Real MVC discovery, without running application startup, migrations or database writes.
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers().AddApplicationPart(typeof(AuthController).Assembly);
@@ -36,7 +38,7 @@ foreach (var resource in resources)
 {
     foreach (var (method, suffix) in new[] { ("GET", ""), ("POST", ""), ("GET", "/lookups"), ("GET", "/export"), ("POST", "/import") })
         Check(routes.Count(r => r.Method == method && r.Route == $"api/{resource}{suffix}") == 1, $"Missing {method} {resource}{suffix}");
-    var update = routes.Single(r => r.Method == "PUT" && r.Route.StartsWith($"api/{resource}/"));
+    var update = routes.Single(r => r.Method == "PUT" && (r.Route == $"api/{resource}/{{id:int}}" || r.Route == $"api/{resource}/{{id:long}}"));
     var dtoType = update.Action.MethodInfo.GetParameters().Single(p => p.Name == "dto").ParameterType;
     var entityName = dtoType.Name.Replace("WriteDto", "");
     var entity = db.Model.GetEntityTypes().Single(e => e.ClrType.Name == entityName);
@@ -65,3 +67,4 @@ await Reject(new() { AutoAddFloors = true, FloorsCount = 2, SectionsCount = 0 })
 await Reject(new() { TaktsCount = 1 });
 await Reject(new() { SectionsCount = 51 });
 Console.WriteLine($"PASS: {routes.Length} MVC routes; 15 ORM key/capability contracts; DTO and construction validation. No database connections or writes.");
+if (args.Contains("--database")) await ObjectWorkspaceChecks.RunAsync();

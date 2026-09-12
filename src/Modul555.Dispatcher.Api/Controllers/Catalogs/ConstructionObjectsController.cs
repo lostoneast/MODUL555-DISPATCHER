@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DispatcherApp.Controllers.Catalogs;
 
 [Route("api/construction-objects")]
-public sealed class ConstructionObjectsController(CatalogService catalogs) : CatalogControllerBase(catalogs, "construction-objects")
+public sealed class ConstructionObjectsController(CatalogService catalogs, ConstructionObjectDeletionService deletion) : CatalogControllerBase(catalogs, "construction-objects")
 {
     [HttpGet]
     public async Task<ActionResult<PagedResult<ConstructionObjectDto>>> List([FromQuery] PagedQuery query, CancellationToken ct)
@@ -25,11 +25,15 @@ public sealed class ConstructionObjectsController(CatalogService catalogs) : Cat
         => Ok(await Catalogs.GetConstructionObjectAsync(id, ct));
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Deactivate(int id, CancellationToken ct)
+    public async Task<IActionResult> Delete(int id, [FromBody] ObjectDeletionRequest request, CancellationToken ct)
     {
-        await Catalogs.DeactivateConstructionObjectAsync(id, ct);
+        await deletion.DeleteAsync(id, request, ct);
         return NoContent();
     }
+
+    [HttpGet("{id:int}/deletion-preview")]
+    public async Task<ActionResult<ObjectDeletionPreview>> DeletionPreview(int id, CancellationToken ct)
+        => Ok(await deletion.PreviewAsync(id, ct));
 
     [HttpPost("{id:int}/activate")]
     public async Task<IActionResult> Activate(int id, CancellationToken ct)

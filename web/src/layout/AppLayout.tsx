@@ -313,7 +313,7 @@ export default function AppLayout() {
             </Typography.Text>
           </Dropdown>
         </Layout.Header>
-        <Layout.Content style={{ padding: 20 }}>
+        <Layout.Content style={{ padding: 20, minWidth: 0 }}>
           <Outlet />
         </Layout.Content>
       </Layout>

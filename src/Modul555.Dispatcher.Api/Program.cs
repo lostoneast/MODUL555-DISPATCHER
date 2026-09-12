@@ -28,6 +28,8 @@ builder.Services.AddHttpClient("keycloak");
 builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CatalogService>();
+builder.Services.AddScoped<ObjectProductsService>();
+builder.Services.AddScoped<ConstructionObjectDeletionService>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<DemoDataService>();
 
