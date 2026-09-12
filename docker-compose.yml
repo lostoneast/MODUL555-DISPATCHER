@@ -3,6 +3,8 @@ services:
     image: postgres:17-alpine
     container_name: modul555-dispatcher-db
     restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-modul555_dispatcher}
       POSTGRES_USER: ${POSTGRES_USER:-dispatcher}
