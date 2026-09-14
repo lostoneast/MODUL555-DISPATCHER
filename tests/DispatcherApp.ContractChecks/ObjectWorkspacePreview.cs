@@ -26,7 +26,11 @@ internal static class ObjectWorkspacePreview
         builder.Logging.ClearProviders();
         builder.Services.AddDbContext<DispatcherDbContext>(o => o.UseNpgsql("Host=127.0.0.1;Port=55439;Database=object_workspace_tests;Username=workspace_test;Password=workspace_test_only"));
         builder.Services.AddScoped<CatalogService>();
+        builder.Services.AddScoped<ProductListService>();
+        builder.Services.AddScoped<ProductDetailService>();
+        builder.Services.AddScoped<ProductOperationsService>();
         builder.Services.AddScoped<ObjectProductsService>();
+        builder.Services.AddScoped<ObjectProductImportService>();
         builder.Services.AddScoped<ConstructionObjectDeletionService>();
         builder.Services.AddScoped<ICurrentUser, PreviewUser>();
         builder.Services.AddAuthorization();

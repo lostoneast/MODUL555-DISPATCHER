@@ -25,7 +25,7 @@ public sealed class ObjectProductsQuery
     public bool Descending { get; set; }
 }
 
-public sealed class ObjectProductWriteDto : ProductWriteDto
+public class ObjectProductWriteDto : ProductWriteDto
 {
     [Range(1, long.MaxValue)] public long Version { get; set; } = 1;
     public int? BuildingSectionId { get; set; }

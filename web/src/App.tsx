@@ -20,6 +20,7 @@ import {
   VehicleTypesPage,
 } from "./pages/catalogs/index";
 import ConstructionObjectDetailPage from "./pages/catalogs/ConstructionObjectDetailPage";
+import ProductDetailPage from "./pages/catalogs/ProductDetailPage";
 import { ConstructionObjectsPage } from "./pages/catalogs/ConstructionObjectsPage";
 import {
   AdminHomePage,
@@ -49,6 +50,7 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route path="/" element={<Navigate to="/products" replace />} />
           <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/product-types" element={<ProductTypesPage />} />
           <Route path="/plants" element={<PlantsPage />} />
           <Route path="/production-lines" element={<ProductionLinesPage />} />

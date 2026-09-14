@@ -9,8 +9,23 @@ namespace DispatcherApp.Controllers.Catalogs;
 [ApiController]
 [Authorize]
 [Route("api/construction-objects/{objectId:int}/products")]
-public sealed class ObjectProductsController(ObjectProductsService service) : ControllerBase
+public sealed class ObjectProductsController(ObjectProductsService service, ObjectProductImportService importer) : ControllerBase
 {
+    [HttpGet("import-example")]
+    public IActionResult ImportExample() => File(ObjectProductImportService.ExampleFile(),
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "products-import-example.xlsx");
+
+    [HttpPost("import")]
+    [RequestSizeLimit(20_000_000)]
+    public async Task<ActionResult<ImportResult>> Import(int objectId, [FromForm] IFormFile file,
+        [FromForm] string? suffix, [FromForm] int startNumber = 1, CancellationToken ct = default)
+    {
+        if (file.Length == 0 || !string.Equals(Path.GetExtension(file.FileName), ".xlsx", StringComparison.OrdinalIgnoreCase))
+            return BadRequest(new { message = "Выберите непустой файл .xlsx." });
+        await using var stream = file.OpenReadStream();
+        return Ok(await importer.ImportAsync(objectId, stream, suffix, startNumber, ct));
+    }
+
     [HttpGet]
     public async Task<ActionResult<PagedResult<ObjectProductDto>>> List(int objectId, [FromQuery] ObjectProductsQuery query, CancellationToken ct)
         => Ok(await service.ListAsync(objectId, query, ct));

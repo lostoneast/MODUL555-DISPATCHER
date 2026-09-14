@@ -16,6 +16,8 @@ public sealed class ApiExceptionFilter : IExceptionFilter
             KeyNotFoundException => (404, "Запись не найдена."),
             ArgumentException ex => (400, ex.Message),
             DbUpdateConcurrencyException => (409, "Запись была изменена. Обновите данные и повторите операцию."),
+            DbUpdateException { InnerException: PostgresException { SqlState: "40001" or "40P01" } }
+                => (409, "Связанные данные изменились одновременно с сохранением. Обновите карточку и повторите операцию."),
             DbUpdateException { InnerException: PostgresException { SqlState: "23505" } }
                 => (409, "Запись с такими уникальными значениями уже существует."),
             DbUpdateException { InnerException: PostgresException { SqlState: "23503" } }

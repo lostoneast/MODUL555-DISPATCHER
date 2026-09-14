@@ -3,7 +3,7 @@ import CatalogPage from "../../components/CatalogPage";
 export function StorageAreasPage() {
   return (
     <CatalogPage
-      title="Склады"
+      title="Буферные зоны"
       path="storage-areas"
       columns={[
         { title: "Наименование", dataIndex: "name" },

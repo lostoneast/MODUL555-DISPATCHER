@@ -180,7 +180,7 @@ export default function AppLayout() {
       {
         key: "storage",
         icon: <DatabaseOutlined />,
-        label: "Склад",
+        label: "Склады и буферные зоны",
         children: [
           {
             key: "/storage-areas",

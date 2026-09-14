@@ -16,6 +16,7 @@ import {
 } from "antd";
 import {
   DownloadOutlined,
+  UploadOutlined,
   EditOutlined,
   PlusOutlined,
   ReloadOutlined,
@@ -37,6 +38,7 @@ import {
   useSaveObjectProductMutation,
 } from "../../api/objectWorkspace";
 import type { ObjectProduct, ProductsQuery } from "../../api/objectWorkspace";
+import ImportObjectProductsModal from "./ImportObjectProductsModal";
 
 const defaultVisible = [
   "productCode",
@@ -76,6 +78,7 @@ export default function ObjectProductsTable({
     sortBy: "productCode",
   });
   const [search, setSearch] = useState("");
+  const [importOpen, setImportOpen] = useState(false);
   const [editing, setEditing] = useState<ObjectProduct>();
   const [failure, setFailure] = useState<string>();
   const [visible, setVisible] = useState<string[]>(defaultVisible);
@@ -566,6 +569,10 @@ export default function ObjectProductsTable({
           >
             Добавить изделие
           </Button>
+          <Button icon={<UploadOutlined />} disabled={readOnly || !!editing}
+            onClick={() => setImportOpen(true)}>
+            Импорт из Excel
+          </Button>
           <Button
             icon={<ReloadOutlined />}
             disabled={!!editing}
@@ -680,6 +687,7 @@ export default function ObjectProductsTable({
           }}
         />
       </Form>
+      {importOpen && <ImportObjectProductsModal objectId={objectId} onClose={() => setImportOpen(false)} />}
     </Space>
   );
 }

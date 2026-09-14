@@ -32,6 +32,24 @@ body {
   max-width: 100%;
 }
 
+.products-list > .ant-space-item {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.products-list .ant-table-thead > tr > th {
+  vertical-align: top;
+}
+
+.product-filter-condition {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+}
+
 .object-product-editing > td {
   background: #eaf4ff !important;
   vertical-align: top;

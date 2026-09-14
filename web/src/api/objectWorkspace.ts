@@ -81,6 +81,34 @@ export function errorMessage(error: unknown): string {
 
 const workspace = api.injectEndpoints({
   endpoints: (build) => ({
+    importObjectProducts: build.mutation<
+      { created: number; updated: number; errors: string[] },
+      { objectId: string; file: File; suffix: string; startNumber: number }
+    >({
+      query: ({ objectId, file, suffix, startNumber }) => {
+        const body = new FormData();
+        body.append("file", file);
+        body.append("suffix", suffix);
+        body.append("startNumber", String(startNumber));
+        return { url: `/construction-objects/${objectId}/products/import`, method: "POST", body };
+      },
+      invalidatesTags: (result) => result?.created ? ["Catalog", "Lookup"] : [],
+    }),
+    objectImportExample: build.mutation<{ downloaded: boolean }, string>({
+      query: (objectId) => ({
+        url: `/construction-objects/${objectId}/products/import-example`,
+        responseHandler: async (response) => {
+          if (!response.ok) return response.json();
+          const url = URL.createObjectURL(await response.blob());
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "products-import-example.xlsx";
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          return { downloaded: true };
+        },
+      }),
+    }),
     objectProducts: build.query<Paged<ObjectProduct>, ProductsQuery>({
       query: (q) => `/construction-objects/${q.objectId}/products?${queryString(q)}`,
       providesTags: ["Catalog"],
@@ -139,6 +167,8 @@ const workspace = api.injectEndpoints({
   }),
 });
 export const {
+  useImportObjectProductsMutation,
+  useObjectImportExampleMutation,
   useObjectProductsQuery,
   useObjectStructureQuery,
   useSaveObjectProductMutation,
